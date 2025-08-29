@@ -3,7 +3,7 @@ import { User, Session } from "@supabase/supabase-js";
 import { supabase } from '../integrations/supabase/client';
 
 
-interface Profile {
+interface UserProfile {
   id: string;
   user_id: string;
   email: string;
@@ -17,22 +17,24 @@ interface Profile {
 
 interface AuthContextType {
   user: User | null;
-  profile: Profile | null;
   session: Session | null;
-  loading: boolean;
-  signIn: (email: string, password: string) => Promise<{ error: any }>;
-  signUp: (email: string, password: string, fullName: string, avatarFile?: File) => Promise<{ error: any }>;
+  userProfile: UserProfile | null;
+  profile: UserProfile | null;
+  isLoading: boolean;
+  signIn: (email: string, password: string) => Promise<{ error?: any }>;
+  signUp: (email: string, password: string, userData?: any) => Promise<{ error?: any }>;
   signOut: () => Promise<void>;
-  updateProfile: (updates: Partial<Profile>) => Promise<{ error: any }>;
+  refreshProfile: () => Promise<void>;
+  updateProfile: (updates: Partial<UserProfile>) => Promise<{ error: any }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchProfile = async (userId: string) => {
     try {
@@ -47,7 +49,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      setProfile(data);
+      setUserProfile(data);
     } catch (error) {
       console.error("Erreur lors de la récupération du profil:", error);
     }
@@ -65,10 +67,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             fetchProfile(session.user.id);
           }, 0);
         } else {
-          setProfile(null);
+          setUserProfile(null);
         }
 
-        setLoading(false);
+        setIsLoading(false);
       }
     );
 
@@ -81,7 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         fetchProfile(session.user.id);
       }
 
-      setLoading(false);
+      setIsLoading(false);
     });
 
     return () => subscription.unsubscribe();
@@ -95,48 +97,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { error };
   };
 
-  const signUp = async (email: string, password: string, fullName: string, avatarFile?: File) => {
+  const signUp = async (email: string, password: string, userData?: any) => {
     try {
-      const redirectUrl = `${window.location.origin}/`;
-
-      const { data, error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: redirectUrl,
-          data: {
-            full_name: fullName,
-          },
-        },
-      });
-
-      if (error) return { error };
-
-      // Upload de l'avatar si fourni
-      if (avatarFile && data.user) {
-        const fileExt = avatarFile.name.split('.').pop();
-        const fileName = `${data.user.id}/avatar.${fileExt}`;
-
-        const { error: uploadError } = await supabase.storage
-          .from('avatars')
-          .upload(fileName, avatarFile, { upsert: true });
-
-        if (!uploadError) {
-          const { data: { publicUrl } } = supabase.storage
-            .from('avatars')
-            .getPublicUrl(fileName);
-
-          // Mettre à jour le profil avec l'URL de l'avatar
-          await supabase
-            .from('profiles')
-            .update({ avatar_url: publicUrl })
-            .eq('user_id', data.user.id);
+          data: userData,
+          emailRedirectTo: `${window.location.origin}/`
         }
-      }
-
-      return { error: null };
+      });
+      return { error };
     } catch (error) {
       return { error };
+    }
+  };
+
+  const refreshProfile = async () => {
+    if (user) {
+      await fetchProfile(user.id);
     }
   };
 
@@ -144,7 +123,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await supabase.auth.signOut();
   };
 
-  const updateProfile = async (updates: Partial<Profile>) => {
+  const updateProfile = async (updates: Partial<UserProfile>) => {
     if (!user) return { error: new Error("Utilisateur non connecté") };
 
     const { error } = await supabase
@@ -153,7 +132,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .eq("user_id", user.id);
 
     if (!error) {
-      setProfile(prev => prev ? { ...prev, ...updates } : null);
+      setUserProfile(prev => prev ? { ...prev, ...updates } : null);
     }
 
     return { error };
@@ -161,12 +140,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const value = {
     user,
-    profile,
     session,
-    loading,
+    userProfile,
+    profile: userProfile,
+    isLoading,
     signIn,
     signUp,
     signOut,
+    refreshProfile,
     updateProfile,
   };
 
