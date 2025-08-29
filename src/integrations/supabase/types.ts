@@ -118,6 +118,89 @@ export type Database = {
           },
         ]
       }
+      analytics_visitors: {
+        Row: {
+          browser_name: string | null
+          browser_version: string | null
+          city: string | null
+          country: string | null
+          created_at: string | null
+          created_by: string | null
+          device_type: string | null
+          event_data: Json | null
+          event_type: string | null
+          id: string
+          ip_address: unknown | null
+          is_bounce: boolean | null
+          is_new_visitor: boolean | null
+          os_name: string | null
+          page_path: string
+          page_title: string | null
+          referrer: string | null
+          session_duration: number | null
+          session_id: string
+          timezone: string | null
+          updated_at: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          browser_name?: string | null
+          browser_version?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          device_type?: string | null
+          event_data?: Json | null
+          event_type?: string | null
+          id?: string
+          ip_address?: unknown | null
+          is_bounce?: boolean | null
+          is_new_visitor?: boolean | null
+          os_name?: string | null
+          page_path: string
+          page_title?: string | null
+          referrer?: string | null
+          session_duration?: number | null
+          session_id: string
+          timezone?: string | null
+          updated_at?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          browser_name?: string | null
+          browser_version?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          device_type?: string | null
+          event_data?: Json | null
+          event_type?: string | null
+          id?: string
+          ip_address?: unknown | null
+          is_bounce?: boolean | null
+          is_new_visitor?: boolean | null
+          os_name?: string | null
+          page_path?: string
+          page_title?: string | null
+          referrer?: string | null
+          session_duration?: number | null
+          session_id?: string
+          timezone?: string | null
+          updated_at?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "analytics_visitors_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       appointments: {
         Row: {
           appointment_date: string
@@ -346,6 +429,42 @@ export type Database = {
         }
         Relationships: []
       }
+      garage_links: {
+        Row: {
+          created_at: string | null
+          garage_id: string | null
+          id: string
+          organization_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          garage_id?: string | null
+          id?: string
+          organization_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          garage_id?: string | null
+          id?: string
+          organization_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "garage_links_garage_id_fkey"
+            columns: ["garage_id"]
+            isOneToOne: false
+            referencedRelation: "garages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "garage_links_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       garages: {
         Row: {
           address: string
@@ -356,7 +475,11 @@ export type Database = {
           name: string
           opening_hours: string | null
           organisation_id: string | null
+          organization_id: string | null
           phone: string | null
+          phone_country_code: string | null
+          phone_display: string | null
+          phone_formatted: string | null
           updated_at: string | null
         }
         Insert: {
@@ -368,7 +491,11 @@ export type Database = {
           name: string
           opening_hours?: string | null
           organisation_id?: string | null
+          organization_id?: string | null
           phone?: string | null
+          phone_country_code?: string | null
+          phone_display?: string | null
+          phone_formatted?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -380,10 +507,22 @@ export type Database = {
           name?: string
           opening_hours?: string | null
           organisation_id?: string | null
+          organization_id?: string | null
           phone?: string | null
+          phone_country_code?: string | null
+          phone_display?: string | null
+          phone_formatted?: string | null
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "garages_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       invoices: {
         Row: {
@@ -473,7 +612,15 @@ export type Database = {
           organisation_id?: string | null
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "onboarding_workflow_states_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users_view"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       organisation_creation_log: {
         Row: {
@@ -494,75 +641,102 @@ export type Database = {
           id?: number
           organisation_id?: string | null
         }
-        Relationships: []
-      }
-      organisations: {
-        Row: {
-          code: string | null
-          created_at: string | null
-          description: string | null
-          email: string
-          id: string
-          name: string
-          owner_id: string | null
-          slug: string
-          subscription_type: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          code?: string | null
-          created_at?: string | null
-          description?: string | null
-          email: string
-          id?: string
-          name: string
-          owner_id?: string | null
-          slug: string
-          subscription_type?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          code?: string | null
-          created_at?: string | null
-          description?: string | null
-          email?: string
-          id?: string
-          name?: string
-          owner_id?: string | null
-          slug?: string
-          subscription_type?: string | null
-          updated_at?: string | null
-        }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "organisation_creation_log_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users_view"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       organizations: {
         Row: {
           address: string | null
-          admin_id: string | null
+          city: string | null
+          company_email: string | null
+          country: string | null
           created_at: string | null
+          description: string | null
+          email: string | null
           id: string
+          logo_url: string | null
           name: string
+          owner_id: string | null
+          phone: string | null
+          phone_country_code: string | null
+          phone_display: string | null
+          phone_formatted: string | null
+          plan_type: string | null
+          slug: string
+          subdomain: string | null
+          super_admin_id: string | null
+          updated_at: string | null
+          user_id: string | null
+          website: string | null
         }
         Insert: {
           address?: string | null
-          admin_id?: string | null
+          city?: string | null
+          company_email?: string | null
+          country?: string | null
           created_at?: string | null
+          description?: string | null
+          email?: string | null
           id?: string
+          logo_url?: string | null
           name: string
+          owner_id?: string | null
+          phone?: string | null
+          phone_country_code?: string | null
+          phone_display?: string | null
+          phone_formatted?: string | null
+          plan_type?: string | null
+          slug: string
+          subdomain?: string | null
+          super_admin_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          website?: string | null
         }
         Update: {
           address?: string | null
-          admin_id?: string | null
+          city?: string | null
+          company_email?: string | null
+          country?: string | null
           created_at?: string | null
+          description?: string | null
+          email?: string | null
           id?: string
+          logo_url?: string | null
           name?: string
+          owner_id?: string | null
+          phone?: string | null
+          phone_country_code?: string | null
+          phone_display?: string | null
+          phone_formatted?: string | null
+          plan_type?: string | null
+          slug?: string
+          subdomain?: string | null
+          super_admin_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          website?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "organizations_admin_id_fkey"
-            columns: ["admin_id"]
+            foreignKeyName: "organizations_owner_id_fkey"
+            columns: ["owner_id"]
             isOneToOne: false
-            referencedRelation: "admins"
+            referencedRelation: "users_view"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "organizations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users_view"
             referencedColumns: ["id"]
           },
         ]
@@ -650,69 +824,60 @@ export type Database = {
       }
       profiles: {
         Row: {
-          admin_type: string | null
           avatar_url: string | null
-          created_at: string | null
           email: string
           first_name: string | null
           full_name: string | null
           id: string
-          is_active: boolean | null
-          is_superadmin: boolean | null
           last_name: string | null
-          name: string | null
-          organisation_id: string | null
+          organization_id: string | null
           phone: string | null
-          phone_verified: boolean | null
-          role: string | null
-          sms_code: string | null
-          sms_code_expires_at: string | null
-          updated_at: string | null
-          user_id: string | null
+          role: string
+          status: boolean | null
+          user_id: string
         }
         Insert: {
-          admin_type?: string | null
           avatar_url?: string | null
-          created_at?: string | null
           email: string
           first_name?: string | null
           full_name?: string | null
-          id: string
-          is_active?: boolean | null
-          is_superadmin?: boolean | null
+          id?: string
           last_name?: string | null
-          name?: string | null
-          organisation_id?: string | null
+          organization_id?: string | null
           phone?: string | null
-          phone_verified?: boolean | null
-          role?: string | null
-          sms_code?: string | null
-          sms_code_expires_at?: string | null
-          updated_at?: string | null
-          user_id?: string | null
+          role: string
+          status?: boolean | null
+          user_id: string
         }
         Update: {
-          admin_type?: string | null
           avatar_url?: string | null
-          created_at?: string | null
           email?: string
           first_name?: string | null
           full_name?: string | null
           id?: string
-          is_active?: boolean | null
-          is_superadmin?: boolean | null
           last_name?: string | null
-          name?: string | null
-          organisation_id?: string | null
+          organization_id?: string | null
           phone?: string | null
-          phone_verified?: boolean | null
-          role?: string | null
-          sms_code?: string | null
-          sms_code_expires_at?: string | null
-          updated_at?: string | null
-          user_id?: string | null
+          role?: string
+          status?: boolean | null
+          user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users_view"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       repair_photos: {
         Row: {
@@ -963,13 +1128,18 @@ export type Database = {
           is_superadmin: boolean | null
           name: string | null
           nom: string | null
+          permissions: Json | null
           phone: string | null
+          phone_country_code: string | null
+          phone_display: string | null
+          phone_formatted: string | null
           prenom: string | null
           pricing_plan: Database["public"]["Enums"]["pricing_plan_type"]
           role: string
           trial_consumed: boolean
           trial_ends_at: string
           trial_started_at: string
+          updated_at: string | null
           user_id: string
         }
         Insert: {
@@ -980,13 +1150,18 @@ export type Database = {
           is_superadmin?: boolean | null
           name?: string | null
           nom?: string | null
+          permissions?: Json | null
           phone?: string | null
+          phone_country_code?: string | null
+          phone_display?: string | null
+          phone_formatted?: string | null
           prenom?: string | null
           pricing_plan?: Database["public"]["Enums"]["pricing_plan_type"]
           role?: string
           trial_consumed?: boolean
           trial_ends_at?: string
           trial_started_at?: string
+          updated_at?: string | null
           user_id: string
         }
         Update: {
@@ -997,16 +1172,29 @@ export type Database = {
           is_superadmin?: boolean | null
           name?: string | null
           nom?: string | null
+          permissions?: Json | null
           phone?: string | null
+          phone_country_code?: string | null
+          phone_display?: string | null
+          phone_formatted?: string | null
           prenom?: string | null
           pricing_plan?: Database["public"]["Enums"]["pricing_plan_type"]
           role?: string
           trial_consumed?: boolean
           trial_ends_at?: string
           trial_started_at?: string
+          updated_at?: string | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "super_admins_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users_view"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_contexts: {
         Row: {
@@ -1054,7 +1242,15 @@ export type Database = {
           updated_at?: string | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "user_organisations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users_view"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
@@ -1108,7 +1304,15 @@ export type Database = {
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "user_settings_user_fk"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users_view"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       users: {
         Row: {
@@ -1119,7 +1323,11 @@ export type Database = {
           id: string
           name: string
           phone: string | null
+          phone_country_code: string | null
+          phone_display: string | null
+          phone_formatted: string | null
           role: string
+          updated_at: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -1129,7 +1337,11 @@ export type Database = {
           id?: string
           name: string
           phone?: string | null
+          phone_country_code?: string | null
+          phone_display?: string | null
+          phone_formatted?: string | null
           role: string
+          updated_at?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -1139,7 +1351,11 @@ export type Database = {
           id?: string
           name?: string
           phone?: string | null
+          phone_country_code?: string | null
+          phone_display?: string | null
+          phone_formatted?: string | null
           role?: string
+          updated_at?: string | null
         }
         Relationships: [
           {
@@ -1176,7 +1392,15 @@ export type Database = {
           updated_at?: string | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "users_organisations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users_view"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       vehicles: {
         Row: {
@@ -1259,11 +1483,33 @@ export type Database = {
           updated_at?: string | null
           user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "workflow_states_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users_view"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
-      [_ in never]: never
+      users_view: {
+        Row: {
+          email: string | null
+          id: string | null
+        }
+        Insert: {
+          email?: string | null
+          id?: string | null
+        }
+        Update: {
+          email?: string | null
+          id?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       check_admin_email_exists: {
@@ -1303,22 +1549,14 @@ export type Database = {
         Returns: Json
       }
       create_admin_complete: {
-        Args:
-          | {
-              p_avatar_url?: string
-              p_email: string
-              p_name: string
-              p_password: string
-              p_phone?: string
-              p_pricing_plan?: string
-            }
-          | {
-              p_email: string
-              p_name: string
-              p_password: string
-              p_phone?: string
-              p_pricing_plan?: string
-            }
+        Args: {
+          p_avatar_url?: string
+          p_email: string
+          p_name: string
+          p_password: string
+          p_phone?: string
+          p_pricing_plan?: string
+        }
         Returns: Json
       }
       create_admin_user: {
@@ -1460,7 +1698,21 @@ export type Database = {
         Returns: Json
       }
       create_organization_complete: {
-        Args: { p_address?: string; p_admin_email?: string; p_name: string }
+        Args: {
+          p_address: string
+          p_city: string
+          p_company_email?: string
+          p_country: string
+          p_description: string
+          p_email: string
+          p_logo_url?: string
+          p_name: string
+          p_phone: string
+          p_plan_type?: string
+          p_slug: string
+          p_subdomain?: string
+          p_website?: string
+        }
         Returns: Json
       }
       create_organization_for_admin: {
@@ -1504,60 +1756,21 @@ export type Database = {
         }
         Returns: undefined
       }
-      create_super_admin: {
-        Args: { p_email: string; p_name: string; p_password: string }
-        Returns: {
-          id: string
-        }[]
-      }
-      create_super_admin_complete: {
-        Args: {
-          p_email: string
-          p_name: string
-          p_password: string
-          p_phone?: string
-        }
-        Returns: Json
-      }
-      create_super_admin_v2: {
-        Args: { p_email: string; p_name: string; p_phone: string }
-        Returns: Json
-      }
       create_super_admin_with_auth: {
-        Args: {
-          p_email: string
-          p_nom: string
-          p_password: string
-          p_phone: string
-        }
+        Args: { p_user_id: string }
         Returns: string
       }
       create_user_profile: {
-        Args:
-          | {
-              avatar_url?: string
-              email: string
-              full_name: string
-              organisation_id?: string
-              phone?: string
-              role?: string
-              user_id: string
-            }
-          | {
-              full_name: string
-              phone: string
-              user_email: string
-              user_id: string
-              user_role: string
-            }
-          | {
-              user_email: string
-              user_name: string
-              user_password: string
-              user_phone: string
-              user_role?: string
-            }
-        Returns: undefined
+        Args: {
+          avatar_url?: string
+          email: string
+          full_name: string
+          organisation_id?: string
+          phone?: string
+          role?: string
+          user_id: string
+        }
+        Returns: Json
       }
       create_user_simple: {
         Args: { user_email: string; user_id: string; user_role?: string }
@@ -1608,6 +1821,15 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: Json
       }
+      get_formatted_phone_number: {
+        Args: { record_id: string; table_name: string }
+        Returns: {
+          phone: string
+          phone_country_code: string
+          phone_display: string
+          phone_formatted: string
+        }[]
+      }
       get_profile: {
         Args: { profile_id: string }
         Returns: {
@@ -1625,6 +1847,10 @@ export type Database = {
       get_super_admin_subscription_state: {
         Args: { p_user_id: string }
         Returns: Json
+      }
+      get_user_count: {
+        Args: Record<PropertyKey, never>
+        Returns: number
       }
       get_user_organisations: {
         Args: { user_uuid: string }
@@ -1654,12 +1880,19 @@ export type Database = {
         Returns: boolean
       }
       is_super_admin: {
-        Args: Record<PropertyKey, never>
+        Args: { p_user_id: string }
         Returns: boolean
       }
       is_valid_phone: {
         Args: { p_phone: string }
         Returns: boolean
+      }
+      migrate_all_phone_numbers: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          records_updated: number
+          table_name: string
+        }[]
       }
       quick_downgrade_to_admin: {
         Args: { target_email: string }
@@ -1683,6 +1916,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      test_super_admin_creation: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       update_profile: {
         Args: {
           avatar_url: string
@@ -1696,6 +1933,15 @@ export type Database = {
       }
       update_profile_role: {
         Args: { new_role: string; profile_id: string }
+        Returns: undefined
+      }
+      update_super_admin_phone: {
+        Args: {
+          admin_id: string
+          phone_country_code: string
+          phone_display: string
+          phone_formatted: string
+        }
         Returns: undefined
       }
       update_super_admin_plan: {
@@ -1736,6 +1982,15 @@ export type Database = {
           user_role?: string
         }
         Returns: Json
+      }
+      validate_phone_number: {
+        Args: { country_code?: string; phone_number: string }
+        Returns: {
+          detected_country: string
+          formatted_display: string
+          formatted_storage: string
+          is_valid: boolean
+        }[]
       }
       validate_sms_code: {
         Args: { p_code: string; p_phone?: string }
