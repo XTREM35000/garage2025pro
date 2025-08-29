@@ -21,12 +21,6 @@ export interface WorkflowState {
   lastActiveOrg?: string | null;
 }
 
-export interface WorkflowError {
-  message: string;
-  code?: string;
-  details?: any;
-}
-
 export interface WorkflowContextType {
   state: WorkflowState;
   completeStep: (step: WorkflowStep) => Promise<void>;
@@ -48,4 +42,10 @@ export interface DBWorkflowState {
   metadata: Record<string, any>;
   created_at: string;
   updated_at: string;
+}
+
+export interface WorkflowError {
+  code: string;
+  message: string;
+  details?: any;
 }
