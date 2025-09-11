@@ -33,7 +33,7 @@ export const SmsValidationModal = () => {
   const [foundOrganization, setFoundOrganization] = useState<Organization | null>(null);
 
   // Vérifier si c'est l'étape actuelle
-  if (state.currentStep !== 'sms_validation') {
+  if (state.current_step !== 'sms_validation') {
     return null;
   }
 
@@ -181,7 +181,7 @@ export const SmsValidationModal = () => {
     <WhatsAppModal isOpen={true} onClose={() => { }}>
       <div className="p-6 max-w-md mx-auto">
         <div className="mb-4">
-          <MiniStepProgress currentStep={state.currentStep} completedSteps={state.completedSteps} />
+          <MiniStepProgress currentStep={state.current_step} completedSteps={state.completed_steps} />
         </div>
         <h2 className="text-2xl font-bold text-[#128C7E] mb-6 text-center">
           Validation SMS Organisation

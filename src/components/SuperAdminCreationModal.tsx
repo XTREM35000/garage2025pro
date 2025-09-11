@@ -31,7 +31,7 @@ export const SuperAdminCreationModal = memo(({ }: SuperAdminCreationModalProps) 
   const { state, completeStep } = useWorkflow();
   
   // Vérifier si c'est l'étape actuelle AVANT les hooks
-  if (state.currentStep !== 'super_admin') {
+  if (state.current_step !== 'super_admin') {
     return null;
   }
 
@@ -47,15 +47,17 @@ export const SuperAdminCreationModal = memo(({ }: SuperAdminCreationModalProps) 
   const [error, setError] = useState<string | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
-  // Pré-remplir avec les données existantes si disponibles
+  // Reset form when modal opens
   useEffect(() => {
-    if (state.stepData?.super_admin) {
-      setFormData(prev => ({
-        ...prev,
-        ...state.stepData.super_admin
-      }));
-    }
-  }, [state.stepData]);
+    setFormData({
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      password: '',
+      avatarUrl: ''
+    });
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -188,7 +190,7 @@ export const SuperAdminCreationModal = memo(({ }: SuperAdminCreationModalProps) 
     <WhatsAppModal isOpen={true} onClose={() => { }}>
       <div className="max-w-4xl mx-auto">
         <div className="mb-4">
-          <MiniStepProgress currentStep={state.currentStep} completedSteps={state.completedSteps} />
+          <MiniStepProgress currentStep={state.current_step} completedSteps={state.completed_steps} />
         </div>
         <AvatarUpload
           avatarPreview={avatarPreview}

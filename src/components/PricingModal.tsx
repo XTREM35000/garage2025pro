@@ -34,7 +34,7 @@ export const PricingModal = () => {
   const { pricing, loading: pricingLoading } = usePricing();
 
   // Vérifier si c'est l'étape actuelle
-  if (state.currentStep !== 'pricing') {
+  if (state.current_step !== 'pricing') {
     return null;
   }
 

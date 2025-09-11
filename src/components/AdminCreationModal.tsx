@@ -38,19 +38,21 @@ export const AdminCreationModal = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   // Vérifier si c'est l'étape actuelle
-  if (state.currentStep !== 'admin') {
+  if (state.current_step !== 'admin') {
     return null;
   }
 
-  // Pré-remplir avec les données existantes si disponibles
+  // Reset form when modal opens
   useEffect(() => {
-    if (state.stepData?.admin) {
-      setFormData(prev => ({
-        ...prev,
-        ...state.stepData.admin
-      }));
-    }
-  }, [state.stepData]);
+    setFormData({
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      password: '',
+      avatarUrl: ''
+    });
+  }, []);
 
   const handleAvatarChange = (file: File) => {
     const reader = new FileReader();
@@ -205,7 +207,7 @@ export const AdminCreationModal = () => {
     <WhatsAppModal isOpen={true} onClose={() => {}}>
       <div className="max-w-4xl mx-auto">
         <div className="mb-4">
-          <MiniStepProgress currentStep={state.currentStep} completedSteps={state.completedSteps} />
+          <MiniStepProgress currentStep={state.current_step} completedSteps={state.completed_steps} />
         </div>
         <AvatarUpload
           avatarPreview={avatarPreview}

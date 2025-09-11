@@ -73,7 +73,7 @@ export const GarageSetupModal = () => {
   const [coordinates, setCoordinates] = useState<{ lat: number; lng: number } | null>(null);
 
   // Vérifier si c'est l'étape actuelle
-  if (state.currentStep !== 'garage') {
+  if (state.current_step !== 'garage') {
     return null;
   }
 
@@ -300,7 +300,7 @@ export const GarageSetupModal = () => {
     >
       <div className="max-w-4xl mx-auto">
         <div className="mb-4">
-          <MiniStepProgress currentStep={state.currentStep} completedSteps={state.completedSteps} />
+          <MiniStepProgress currentStep={state.current_step} completedSteps={state.completed_steps} />
         </div>
         <Card className="modal-whatsapp-card">
           <CardContent className="space-y-6 p-6">

@@ -18,7 +18,7 @@ const CompletionSummaryModal = () => {
   });
 
   // Vérifier si c'est l'étape actuelle
-  if (state.currentStep !== 'completed') {
+  if (state.current_step !== 'completed') {
     return null;
   }
 

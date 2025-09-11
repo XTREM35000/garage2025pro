@@ -40,13 +40,13 @@ const AppContent = () => {
   // Rendu des modaux selon l'étape actuelle
   return (
     <>
-      {state.currentStep === 'super_admin' && <SuperAdminCreationModal />}
-      {state.currentStep === 'admin' && <AdminCreationModal />}
-      {state.currentStep === 'pricing' && <PricingModal />}
-      {state.currentStep === 'organization' && <OrganizationSetupModal />}
-      {state.currentStep === 'sms_validation' && <SmsValidationModal />}
-      {state.currentStep === 'garage' && <GarageSetupModal />}
-      {state.currentStep === 'completed' && <CompletionSummaryModal />}
+      {state.current_step === 'super_admin' && <SuperAdminCreationModal />}
+      {state.current_step === 'admin' && <AdminCreationModal />}
+      {state.current_step === 'pricing' && <PricingModal />}
+      {state.current_step === 'organization' && <OrganizationSetupModal />}
+      {state.current_step === 'sms_validation' && <SmsValidationModal />}
+      {state.current_step === 'garage' && <GarageSetupModal />}
+      {state.current_step === 'completed' && <CompletionSummaryModal />}
     </>
   );
 };

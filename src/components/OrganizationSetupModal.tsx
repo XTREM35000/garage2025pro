@@ -63,7 +63,7 @@ export const OrganizationSetupModal = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   // Vérifier si c'est l'étape actuelle
-  if (state.currentStep !== 'organization') {
+  if (state.current_step !== 'organization') {
     return null;
   }
 
@@ -357,7 +357,7 @@ export const OrganizationSetupModal = () => {
     <WhatsAppModal isOpen={isOpen} onClose={() => { }}>
       <div className="max-w-4xl mx-auto">
         <div className="mb-4">
-          <MiniStepProgress currentStep={state.currentStep} completedSteps={state.completedSteps} />
+          <MiniStepProgress currentStep={state.current_step} completedSteps={state.completed_steps} />
         </div>
         {/* Utilisation du composant AvatarUpload réutilisable */}
         <AvatarUpload

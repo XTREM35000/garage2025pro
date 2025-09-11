@@ -21,8 +21,8 @@ export type WorkflowStep =
   | 'completed';
 
 export interface WorkflowState {
-  currentStep: WorkflowStep;
-  completedSteps: WorkflowStep[];
+  current_step: WorkflowStep;
+  completed_steps: WorkflowStep[];
   isDemo: boolean;
   loading: boolean;
   error: string | null;
@@ -67,8 +67,8 @@ export const isValidWorkflowStep = (step: unknown): step is WorkflowStep => {
 
 export const parseWorkflowState = (data: any): WorkflowState => {
   return {
-    currentStep: isValidWorkflowStep(data.current_step) ? data.current_step : 'super_admin',
-    completedSteps: Array.isArray(data.completed_steps) ? data.completed_steps : [],
+    current_step: isValidWorkflowStep(data.current_step) ? data.current_step : 'super_admin',
+    completed_steps: Array.isArray(data.completed_steps) ? data.completed_steps : [],
     isDemo: Boolean(data.metadata?.isDemo),
     loading: false,
     error: null,
