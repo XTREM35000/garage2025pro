@@ -32,12 +32,12 @@ export const IntelligentWorkflowWizard = () => {
     }
 
     // Sinon, utiliser l'état du workflow
-    if (state.currentStep && state.currentStep !== 'completed') {
-      setCurrentModal(state.currentStep);
+    if (state.current_step && state.current_step !== 'completed') {
+      setCurrentModal(state.current_step);
     } else {
       setCurrentModal(null);
     }
-  }, [status, state.currentStep, isLoading]);
+  }, [status, state.current_step, isLoading]);
 
   // Gérer la completion des étapes
   const handleStepComplete = async () => {

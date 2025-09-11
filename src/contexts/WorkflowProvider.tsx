@@ -82,16 +82,16 @@ export function WorkflowProvider({ children }: { children: React.ReactNode }) {
         console.log('✅ [WorkflowProvider] Super admin trouvé, passage à admin');
         setState(prev => ({
           ...prev,
-          currentStep: 'admin',
-          completedSteps: ['super_admin'],
+          current_step: 'admin',
+          completed_steps: ['super_admin'],
           isLoading: false
         }));
       } else {
         console.log('ℹ️ [WorkflowProvider] Aucun super admin, création nécessaire');
         setState(prev => ({
           ...prev,
-          currentStep: 'super_admin',
-          completedSteps: [],
+          current_step: 'super_admin',
+          completed_steps: [],
           isLoading: false
         }));
       }
@@ -122,8 +122,8 @@ export function WorkflowProvider({ children }: { children: React.ReactNode }) {
       const newState = {
         ...initialState,
         userId: user.id,
-        currentStep,
-        completedSteps
+        current_step: currentStep,
+        completed_steps: completedSteps
       };
 
       // Sauvegarder dans Supabase (seulement si on a un utilisateur)
@@ -132,8 +132,8 @@ export function WorkflowProvider({ children }: { children: React.ReactNode }) {
           .from('workflow_states')
           .insert({
             user_id: user.id,
-            current_step: newState.currentStep,
-            completed_steps: newState.completedSteps,
+            current_step: newState.current_step,
+            completed_steps: newState.completed_steps,
             metadata: { isDemo: newState.isDemo }
           });
 
@@ -177,8 +177,8 @@ export function WorkflowProvider({ children }: { children: React.ReactNode }) {
         console.log('📋 [WorkflowProvider] État existant trouvé:', workflowData);
 
         setState({
-          currentStep: workflowData.current_step as WorkflowStep,
-          completedSteps: workflowData.completed_steps || [],
+          current_step: workflowData.current_step as WorkflowStep,
+          completed_steps: workflowData.completed_steps || [],
           lastActiveOrg: typeof workflowData.metadata === 'object' && workflowData.metadata !== null
             ? (workflowData.metadata as Record<string, any>).lastActiveOrg
             : undefined,
@@ -268,7 +268,7 @@ export function WorkflowProvider({ children }: { children: React.ReactNode }) {
       console.log('🎯 [WorkflowProvider] Complétion étape:', step);
 
       // Ajouter l'étape aux étapes complétées
-      const newCompletedSteps = [...state.completedSteps, step];
+      const newCompletedSteps = [...state.completed_steps, step];
 
       // Déterminer la prochaine étape selon la logique du workflow
       let nextStep: WorkflowStep;
@@ -299,8 +299,8 @@ export function WorkflowProvider({ children }: { children: React.ReactNode }) {
       // Mettre à jour l'état local immédiatement
       const newState = {
         ...state,
-        currentStep: nextStep,
-        completedSteps: newCompletedSteps,
+        current_step: nextStep,
+        completed_steps: newCompletedSteps,
         loading: false,
         error: null
       };
@@ -323,8 +323,8 @@ export function WorkflowProvider({ children }: { children: React.ReactNode }) {
           // Réinitialiser l'état si la création a échoué
           setState(prev => ({
             ...prev,
-            currentStep: 'super_admin',
-            completedSteps: prev.completedSteps.filter(s => s !== 'super_admin')
+            current_step: 'super_admin',
+            completed_steps: prev.completed_steps.filter(s => s !== 'super_admin')
           }));
           return;
         }

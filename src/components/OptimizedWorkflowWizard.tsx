@@ -57,8 +57,8 @@ export const OptimizedWorkflowWizard: React.FC<OptimizedWorkflowWizardProps> = (
 
     console.log('🔍 Analyse workflow:', state);
 
-    // Utiliser currentStep directement depuis le contexte
-    return state.currentStep;
+    // Utiliser current_step directement depuis le contexte
+    return state.current_step;
   }, [state, isOpen]);
 
   // Mise à jour du modal actuel
@@ -67,7 +67,7 @@ export const OptimizedWorkflowWizard: React.FC<OptimizedWorkflowWizardProps> = (
     console.log(`🔍 [OptimizedWorkflowWizard] Détermination modal:`, {
       nextModal,
       currentModal,
-      stateCurrentStep: state?.currentStep,
+      stateCurrentStep: state?.current_step,
       isOpen
     });
 
@@ -75,7 +75,7 @@ export const OptimizedWorkflowWizard: React.FC<OptimizedWorkflowWizardProps> = (
       console.log(`🔄 Changement modal: ${currentModal} → ${nextModal}`);
       setCurrentModal(nextModal);
     }
-  }, [determineCurrentModal, currentModal, state?.currentStep, isOpen]);
+  }, [determineCurrentModal, currentModal, state?.current_step, isOpen]);
 
   // Effet pour forcer la vérification après chaque étape
   useEffect(() => {
@@ -148,8 +148,8 @@ export const OptimizedWorkflowWizard: React.FC<OptimizedWorkflowWizardProps> = (
       {/* Progress Bar UI */}
       {state && (
         <WorkflowProgressBar
-          currentStep={state.currentStep as any}
-          completedSteps={state.completedSteps as any}
+          currentStep={state.current_step as any}
+          completedSteps={state.completed_steps as any}
           onStepClick={(step) => goToStep(step as any)}
         />
       )}
