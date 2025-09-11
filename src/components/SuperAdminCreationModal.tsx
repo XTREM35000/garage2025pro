@@ -49,10 +49,10 @@ export const SuperAdminCreationModal = memo(({ }: SuperAdminCreationModalProps) 
 
   // Pré-remplir avec les données existantes si disponibles
   useEffect(() => {
-    if (state.stepData?.super_admin_check) {
+    if (state.stepData?.super_admin) {
       setFormData(prev => ({
         ...prev,
-        ...state.stepData.super_admin_check
+        ...state.stepData.super_admin
       }));
     }
   }, [state.stepData]);

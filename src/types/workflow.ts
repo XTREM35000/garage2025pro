@@ -12,50 +12,53 @@ export const WORKFLOW_STEPS = {
 export type WorkflowMode = 'super_admin' | 'tenant' | 'admin';
 
 export type WorkflowStep =
-  | 'super_admin_check'
-  | 'pricing_selection'
-  | 'admin_creation'
-  | 'org_creation'
+  | 'super_admin'
+  | 'admin'
+  | 'pricing'
+  | 'organization'
   | 'sms_validation'
-  | 'garage_setup'
-  | 'dashboard';
+  | 'garage'
+  | 'completed';
 
 export interface WorkflowState {
-  id: string;
-  user_id: string;
-  current_step: string;
-  completed_steps: string[];
-  is_completed: boolean;
-  metadata: Record<string, any>;
-  created_at?: string;
-  updated_at?: string;
+  currentStep: WorkflowStep;
+  completedSteps: WorkflowStep[];
+  isDemo: boolean;
+  loading: boolean;
+  error: string | null;
+  userId?: string;
+  lastActiveOrg?: string;
+  metadata?: Record<string, any>;
+  stepData?: Record<string, any>;
+  isOpen?: boolean;
 }
 
 export interface WorkflowContextType {
   state: WorkflowState;
-  currentStep: WorkflowStep;
-  steps: Array<{ id: WorkflowStep; status: string }>;
   completeStep: (step: WorkflowStep) => Promise<void>;
   goToStep: (step: WorkflowStep) => Promise<void>;
-  canGoToStep: (step: WorkflowStep) => boolean;
   reset: () => Promise<void>;
   isLoading: boolean;
   error: string | null;
+  validateFormField: (field: string, value: string) => {
+    isValid: boolean;
+    error?: string;
+  };
 }
 
 export const WORKFLOW_STEP_ORDER: readonly WorkflowStep[] = [
-  'super_admin_check',
-  'pricing_selection',
-  'admin_creation',
-  'org_creation',
+  'super_admin',
+  'admin', 
+  'pricing',
+  'organization',
   'sms_validation',
-  'garage_setup',
-  'dashboard'
+  'garage',
+  'completed'
 ] as const;
 
 export const getNextStep = (currentStep: WorkflowStep): WorkflowStep => {
   const currentIndex = WORKFLOW_STEP_ORDER.indexOf(currentStep);
-  return WORKFLOW_STEP_ORDER[currentIndex + 1] || 'dashboard';
+  return WORKFLOW_STEP_ORDER[currentIndex + 1] || 'completed';
 };
 
 export const isValidWorkflowStep = (step: unknown): step is WorkflowStep => {
@@ -64,13 +67,13 @@ export const isValidWorkflowStep = (step: unknown): step is WorkflowStep => {
 
 export const parseWorkflowState = (data: any): WorkflowState => {
   return {
-    id: data.id,
-    user_id: data.user_id,
-    current_step: isValidWorkflowStep(data.current_step) ? data.current_step : 'super_admin_check',
-    completed_steps: Array.isArray(data.completed_steps) ? data.completed_steps : [],
-    is_completed: Boolean(data.is_completed),
-    metadata: data.meta || {},
-    created_at: data.created_at,
-    updated_at: data.updated_at
+    currentStep: isValidWorkflowStep(data.current_step) ? data.current_step : 'super_admin',
+    completedSteps: Array.isArray(data.completed_steps) ? data.completed_steps : [],
+    isDemo: Boolean(data.metadata?.isDemo),
+    loading: false,
+    error: null,
+    userId: data.user_id,
+    metadata: data.metadata || {},
+    stepData: data.stepData || {}
   };
 };

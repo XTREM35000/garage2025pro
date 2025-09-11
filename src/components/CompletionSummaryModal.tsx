@@ -57,36 +57,23 @@ const CompletionSummaryModal = () => {
       }
     };
 
-    if (isOpen) {
-      loadSummary();
-      // Timer pour la redirection vers le dashboard
-      const timer = setTimeout(async () => {
-        // Vérifier si l'utilisateur est connecté
-        const { data: { session } } = await supabase.auth.getSession();
+    loadSummary();
+    // Timer pour la redirection vers le dashboard
+    const timer = setTimeout(async () => {
+      // Vérifier si l'utilisateur est connecté
+      const { data: { session } } = await supabase.auth.getSession();
 
-        if (session?.user) {
-          console.log('✅ Redirection vers dashboard avec utilisateur:', session.user.email);
-          navigate('/dashboard');
-        } else {
-          console.log('❌ Pas de session - redirection vers auth');
-          navigate('/auth');
-        }
-        onClose();
-      }, 3000); // Réduire le délai pour un test plus rapide
+      if (session?.user) {
+        console.log('✅ Redirection vers dashboard avec utilisateur:', session.user.email);
+        navigate('/dashboard');
+      } else {
+        console.log('❌ Pas de session - redirection vers auth');
+        navigate('/auth');
+      }
+    }, 3000); // Réduire le délai pour un test plus rapide
 
-      return () => clearTimeout(timer);
-    }
-  }, [isOpen, navigate]);
-
-  useEffect(() => {
-    if (isOpen) {
-      const timer = setTimeout(() => {
-        onClose();
-      }, 5000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [isOpen, onClose]);
+    return () => clearTimeout(timer);
+  }, [navigate]);
 
   return (
     <Dialog open={true}>
